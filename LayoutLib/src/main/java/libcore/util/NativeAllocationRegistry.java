@@ -2,13 +2,14 @@ package libcore.util;
 
 import com.android.tools.layoutlib.annotations.LayoutlibDelegate;
 import dalvik.system.VMRuntime;
-import sun.misc.Cleaner;
+import java.lang.ref.Cleaner;
 
 public class NativeAllocationRegistry {
 
     private final ClassLoader classLoader;
     private final long freeFunction;
     private final long size;
+    private static final Cleaner CLEANER = Cleaner.create();
 
     public NativeAllocationRegistry(ClassLoader classLoader, long freeFunction, long size) {
         if (size < 0L) {
@@ -30,8 +31,9 @@ public class NativeAllocationRegistry {
         }
         try {
             thunk = new CleanerThunk(this);
-            Cleaner cleaner = Cleaner.create(referent, thunk);
-            result = new CleanerRunner(cleaner);
+            
+            Cleaner.Cleanable cleanable = CLEANER.register(referent, thunk);
+            result = new CleanerRunner(cleanable);
             NativeAllocationRegistry.registerNativeAllocation(this.size);
         } catch (VirtualMachineError vme) {
             NativeAllocationRegistry.applyFreeFunction(this.freeFunction, nativePtr);
@@ -51,11 +53,11 @@ public class NativeAllocationRegistry {
             throw new IllegalArgumentException("referent is null");
         }
         CleanerThunk thunk = new CleanerThunk(this);
-        Cleaner cleaner = Cleaner.create(referent, thunk);
-        CleanerRunner result = new CleanerRunner(cleaner);
+        Cleaner.Cleanable cleanable = CLEANER.register(referent, thunk);
+        CleanerRunner result = new CleanerRunner(cleanable);
         long nativePtr = allocator.allocate();
         if (nativePtr == 0L) {
-            cleaner.clean();
+            cleanable.clean();
             return null;
         }
         NativeAllocationRegistry.registerNativeAllocation(this.size);
@@ -89,15 +91,15 @@ public class NativeAllocationRegistry {
     private static class CleanerRunner
             implements Runnable {
 
-        private final Cleaner cleaner;
+        private final Cleaner.Cleanable cleanable;
 
-        public CleanerRunner(Cleaner cleaner) {
-            this.cleaner = cleaner;
+        public CleanerRunner(Cleaner.Cleanable cleanable) {
+            this.cleanable = cleanable;
         }
 
         @Override
         public void run() {
-            this.cleaner.clean();
+            this.cleanable.clean();
         }
     }
 
