@@ -21,6 +21,8 @@ import com.google.common.collect.Maps;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -152,10 +154,17 @@ public class SchemaModule<T> {
          */
         public SchemaModuleVersion(@NonNull Class<? extends R> objectFactory,
           @NonNull String xsdLocation) {
-            mObjectFactory = objectFactory;
+             mObjectFactory = objectFactory;
             mXsdLocation = xsdLocation;
-            String namespace = objectFactory.getPackage().getAnnotation(XmlSchema.class)
-                    .namespace();
+            Package aPackage = objectFactory.getPackage();
+            String name = aPackage.getName() + ".package-info";
+            String namespace = null;
+            try {
+                Class<?> packageInfo = objectFactory.getClassLoader().loadClass(name);
+                namespace = packageInfo.getAnnotation(XmlSchema.class).namespace();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(SchemaModule.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             assert namespace != null : "Can't create schema module version with no namespace";
             mNamespace = namespace;
