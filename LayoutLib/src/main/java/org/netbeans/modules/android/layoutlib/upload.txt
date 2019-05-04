@@ -1,0 +1,7 @@
+mvn deploy:deploy-file -DgroupId=com.android.tools.layoutlib \
+      -DartifactId=layoutlib \
+      -Dversion=01.03 \
+      -Dpackaging=jar \
+      -Dfile=/hdd/nb11_android/nbandroid/modules/ext/sk-arsi-netbeans-gradle-android-Gradle-Android-support-layout-lib/com-android-tools-layoutlib/layoutlib.jar \
+      -DrepositoryId=netbeans-color-codes-preview \
+      -Durl=https://api.bintray.com/maven/nbandroidteam/layoutlib/com.android.tools.layoutlib.layoutlib/;publish=1
