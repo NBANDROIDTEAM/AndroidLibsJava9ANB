@@ -17,9 +17,10 @@
             <version>2.3.1</version>
         </dependency>
         <dependency>
-            <groupId>org.netbeans.modules.android</groupId>
-            <artifactId>Common</artifactId>
-            <version>26.2.1-NBANDROID</version>
+            <groupId>com.android.tools</groupId>
+            <artifactId>sdklib</artifactId>
+            <version>26.2.1</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <repositories>

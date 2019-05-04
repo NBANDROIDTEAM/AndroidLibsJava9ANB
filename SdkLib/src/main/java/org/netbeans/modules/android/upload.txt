@@ -1,0 +1,7 @@
+mvn deploy:deploy-file -DgroupId=com.android.tools \
+      -DartifactId=sdkLib \
+      -Dversion=26.2.1.ANB \
+      -Dpackaging=jar \
+      -Dfile=/hdd/A/sdklib/sdklib-26.2.1.jar \
+      -DrepositoryId=netbeans-color-codes-preview \
+      -Durl=https://api.bintray.com/maven/nbandroidteam/sdkLib/com.android.tools.sdklib/;publish=1

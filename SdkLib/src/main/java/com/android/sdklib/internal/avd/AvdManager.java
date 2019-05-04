@@ -23,7 +23,6 @@ import com.android.annotations.VisibleForTesting;
 import com.android.annotations.VisibleForTesting.Visibility;
 import com.android.io.IAbstractFile;
 import com.android.io.StreamException;
-import com.android.prefs.AndroidLocation;
 import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.android.repository.api.ConsoleProgressIndicator;
 import com.android.repository.api.LocalPackage;
@@ -405,7 +404,8 @@ public class AvdManager {
     public static AvdManager getInstance(@NonNull AndroidSdkHandler sdkHandler,
             @NonNull ILogger log)
             throws AndroidLocationException {
-        return getInstance(sdkHandler, new File(AndroidLocation.getAvdFolder()), log);
+        System.out.println("com.android.ssss.dddd.avddAvdManager.xxxx()");
+        return getInstance(sdkHandler, new File(AndroidLocation.getAvdFolder(sdkHandler)), log);
     }
 
     @Nullable
@@ -1082,7 +1082,7 @@ public class AvdManager {
         String relPath = null;
         File androidFolder = mSdkHandler.getAndroidFolder();
         if (androidFolder == null) {
-            throw new AndroidLocation.AndroidLocationException(
+            throw new AndroidLocationException(
                     "Can't locate ANDROID_HOME for the AVD .ini file.");
         }
         String androidPath = androidFolder.getAbsolutePath() + File.separator;
